@@ -1,11 +1,9 @@
 use anyhow::Context;
 use async_trait::async_trait;
 use alloy::{
-    primitives::{Address, Bytes},
+    primitives::{Address},
     providers::Provider,
-    rpc::types::TransactionRequest,
 };
-use tempo_alloy::TempoNetwork;
 
 use crate::{
     adapters::tempo_provider::TempoProvider,

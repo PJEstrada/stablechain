@@ -1,5 +1,5 @@
-use crate::domain::chain::{Chain, ParseChainError};
-use crate::domain::chain_ids::chain_ids::TEMPO_TESTNET;
+use crate::domain::chain::{Chain};
+use crate::domain::chain_ids::chains::TEMPO_TESTNET;
 use clap::ValueEnum;
 
 #[derive(Clone, Copy, Debug, ValueEnum, PartialEq, Eq)]

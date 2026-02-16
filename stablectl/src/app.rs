@@ -1,10 +1,11 @@
-use anyhow::{Context, anyhow};
+
 
 use chain_access::{
-    adapters::{tempo_handler::TempoHandler, tempo_provider::connect_tempo},
     domain::chain::{Chain, RpcConfig},
     service::chain_router::ChainRouter,
 };
+use chain_access::adapters::tempo_handler::TempoHandler;
+use chain_access::adapters::tempo_provider::{connect_tempo};
 use crate::cli::Cli;
 
 pub struct App {
@@ -15,9 +16,10 @@ impl App {
     pub async fn init(cli: &Cli) -> anyhow::Result<Self> {
         let mut router = ChainRouter::new();
         let rpc_config = Box::new(RpcConfig::new(cli.network, cli.chain));
-
+        let provider = connect_tempo(&rpc_config).await?;
         // Arc handler (stub for now)
         router = router.register(Chain::Arc, Box::new(NotImplementedHandler));
+        router = router.register(Chain::Tempo, Box::new(TempoHandler::new(provider)));
 
         Ok(Self { router,  rpc_config})
     }

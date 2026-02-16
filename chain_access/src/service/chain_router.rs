@@ -1,9 +1,11 @@
 use std::collections::HashMap;
 
 use crate::domain::chain::Chain;
-use crate::domain::actions::{Action, ExecCtx, ExecResult};
+use crate::domain::actions::{ExecResult, ExecCtx};
 use crate::service::chain_handlers::ChainHandler;
+use crate::domain::actions::Action;
 
+#[derive(Default)]
 pub struct ChainRouter {
     handlers: HashMap<Chain, Box<dyn ChainHandler>>,
 }

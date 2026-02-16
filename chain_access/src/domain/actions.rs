@@ -1,5 +1,5 @@
 use alloy::primitives::U256;
-use crate::domain::account::{AccountId, AccountRef};
+use crate::domain::account::{AccountRef};
 use crate::domain::chain::{Chain, RpcConfig};
 
 /// These are EVM-specific actions that should work across chains via adapters.
