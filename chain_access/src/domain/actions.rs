@@ -1,0 +1,34 @@
+use alloy::primitives::U256;
+use crate::domain::account::{AccountId, AccountRef};
+use crate::domain::chain::{Chain, RpcConfig};
+
+/// These are EVM-specific actions that should work across chains via adapters.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum Action {
+    /// Native token balance via `eth_getBalance`.
+    NativeBalance { owner: [u8; 20] },
+
+    /// ERC-20 balance via `balanceOf(owner)`
+    Erc20Balance { token: [u8; 20], owner: [u8; 20] },
+}
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ExecCtx {
+    pub chain: Chain,
+    pub rpc: Box<RpcConfig>,
+    pub account: Option<AccountRef>,
+}
+
+impl ExecCtx {
+    pub fn new(chain: Chain, rpc: Box<RpcConfig>, account: Option<AccountRef>) -> Self {
+        Self { chain, rpc, account }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ExecResult {
+    /// Returned value for read-only calls.
+    Balance(U256),
+
+    /// Opaque transaction identifier returned by the submitter/backend.
+    Submitted { tx_id: String },
+}
