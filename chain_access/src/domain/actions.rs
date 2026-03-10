@@ -15,12 +15,12 @@ pub enum Action {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExecCtx {
     pub chain: Chain,
-    pub rpc: Box<RpcConfig>,
+    pub rpc: RpcConfig,
     pub account: Option<AccountRef>,
 }
 
 impl ExecCtx {
-    pub fn new(chain: Chain, rpc: Box<RpcConfig>, account: Option<AccountRef>) -> Self {
+    pub fn new(chain: Chain, rpc: RpcConfig, account: Option<AccountRef>) -> Self {
         Self { chain, rpc, account }
     }
 }

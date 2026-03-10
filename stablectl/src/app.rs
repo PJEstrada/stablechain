@@ -10,12 +10,12 @@ use crate::cli::Cli;
 
 pub struct App {
     pub router: ChainRouter,
-    pub rpc_config: Box<RpcConfig>,
+    pub rpc_config: RpcConfig,
 }
 impl App {
     pub async fn init(cli: &Cli) -> anyhow::Result<Self> {
         let mut router = ChainRouter::new();
-        let rpc_config = Box::new(RpcConfig::new(cli.network, cli.chain));
+        let rpc_config = RpcConfig::new(cli.network, cli.chain);
         let provider = connect_tempo(&rpc_config).await?;
         // Arc handler (stub for now)
         router = router.register(Chain::Arc, Box::new(NotImplementedHandler));
