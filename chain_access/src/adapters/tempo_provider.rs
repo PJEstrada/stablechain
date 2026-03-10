@@ -16,7 +16,7 @@ pub async fn connect_tempo(cfg: &RpcConfig) -> anyhow::Result<TempoProvider> {
     let provider = ProviderBuilder::new_with_network::<TempoNetwork>()
         .connect(&cfg.url())
         .await
-        .context("failed to connect to Tempo RPC")?;
+        .with_context(|| format!("failed to connect to Tempo RPC at {}", cfg.url()))?;
 
     Ok(provider)
 }

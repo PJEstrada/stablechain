@@ -1,15 +1,16 @@
 use alloy::primitives::U256;
 use crate::domain::account::{AccountRef};
 use crate::domain::chain::{Chain, RpcConfig};
+use crate::domain::EVM_ADDRESS_LEN;
 
 /// These are EVM-specific actions that should work across chains via adapters.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Action {
     /// Native token balance via `eth_getBalance`.
-    NativeBalance { owner: [u8; 20] },
+    NativeBalance { owner: [u8; EVM_ADDRESS_LEN] },
 
     /// ERC-20 balance via `balanceOf(owner)`
-    Erc20Balance { token: [u8; 20], owner: [u8; 20] },
+    Erc20Balance { token: [u8; EVM_ADDRESS_LEN], owner: [u8; EVM_ADDRESS_LEN] },
 }
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ExecCtx {

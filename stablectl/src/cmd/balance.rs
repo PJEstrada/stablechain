@@ -1,9 +1,8 @@
-
-
 use chain_access::{
     domain::{
         actions::{Action, ExecCtx, ExecResult},
         chain::Chain,
+        EVM_ADDRESS_LEN,
     },
 };
 
@@ -20,7 +19,7 @@ pub async fn run(cmd: NativeBalanceCmd, app: &App) -> anyhow::Result<()> {
 
     let owner: Address = Address::from_str(&cmd.owner)
         .map_err(|e| anyhow::anyhow!("invalid --owner address: {e}"))?;
-    let owner_bytes: [u8; 20] = owner.into_array();
+    let owner_bytes: [u8; EVM_ADDRESS_LEN] = owner.into_array();
 
     // TODO: No account for now, still need to build account management utils.
     let ctx = ExecCtx::new(chain, app.rpc_config.clone(), None);

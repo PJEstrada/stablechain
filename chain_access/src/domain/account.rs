@@ -1,4 +1,5 @@
 use crate::domain::chain::Chain;
+use crate::domain::EVM_ADDRESS_LEN;
 
 /// AccountRef is the stable handle the system uses to refer to an account
 /// that lives in some custody/control system.
@@ -43,7 +44,7 @@ pub struct AccountCapabilities {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct AccountView {
     pub chain: Chain,
-    pub address: [u8; 20],
+    pub address: [u8; EVM_ADDRESS_LEN],
     pub account_ref: AccountRef,
     pub control: AccountControl,
     pub caps: AccountCapabilities,

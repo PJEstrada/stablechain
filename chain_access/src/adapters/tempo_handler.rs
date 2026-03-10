@@ -38,7 +38,7 @@ impl ChainHandler for TempoHandler {
                 Ok(ExecResult::Balance(balance))
             }
             Action::Erc20Balance { .. } => {
-                anyhow::bail!("ERC20 not implemented yet")
+                todo!("ERC20 not implemented yet")
             }
         }
     }
