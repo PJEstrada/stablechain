@@ -1267,6 +1267,7 @@ dependencies = [
  "async-trait",
  "clap",
  "tempo-alloy",
+ "thiserror",
  "tokio",
 ]
 
@@ -1587,32 +1588,6 @@ name = "displaydoc"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97369cbbc041bc366949bc74d34658d6cda5621039731c6310521892a3a20ae0"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.114",
-]
-
-[[package]]
-name = "domain"
-version = "0.11.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f7ff15f82df7d5086fb15dfc1c1e96598a6ded9829840a9bcfa1fa3ccd8d01d"
-dependencies = [
- "bumpalo",
- "bytes",
- "domain-macros",
- "hashbrown 0.14.5",
- "octseq",
- "rand 0.8.5",
- "time",
-]
-
-[[package]]
-name = "domain-macros"
-version = "0.11.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d1a6796ad411f6812d691955066ad27450196bfb181bb91b66a643cc3e8f5b7"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1987,9 +1962,6 @@ name = "hashbrown"
 version = "0.14.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e5274423e17b7c9fc20b6e7e208532f9b19825d82dfd615708b70edd83df41f1"
-dependencies = [
- "allocator-api2",
-]
 
 [[package]]
 name = "hashbrown"
@@ -2672,15 +2644,6 @@ dependencies = [
  "ruint",
  "serde",
  "smallvec",
-]
-
-[[package]]
-name = "octseq"
-version = "0.5.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "126c3ca37c9c44cec575247f43a3e4374d8927684f129d2beeb0d2cef262fe12"
-dependencies = [
- "bytes",
 ]
 
 [[package]]
@@ -4018,7 +3981,6 @@ dependencies = [
  "async-trait",
  "chain_access",
  "clap",
- "domain",
  "hex",
  "tokio",
 ]

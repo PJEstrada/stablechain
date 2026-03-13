@@ -6,6 +6,7 @@ edition = "2024"
 [dependencies]
 async-trait = "0.1.89"
 anyhow = "1.0.101"
+thiserror = "2"
 alloy = "1.6.3"
 tokio = "1.49.0"
 tempo-alloy = { git = "https://github.com/tempoxyz/tempo", version = "1.1.2" }
