@@ -25,3 +25,46 @@ pub fn decode_u256_return(raw: &[u8]) -> U256 {
 pub fn transfer_calldata(to: Address, amount: U256) -> Bytes {
     transferCall { to, amount }.abi_encode().into()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use alloy::primitives::address;
+
+    #[test]
+    fn test_balance_of_calldata_selector() {
+        let owner = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+        let data = balance_of_calldata(owner);
+        assert_eq!(data.len(), 4 + 32, "should be selector (4) + padded address (32)");
+        assert_eq!(&data[..4], &balanceOfCall::SELECTOR, "selector must match");
+    }
+
+    #[test]
+    fn test_transfer_calldata_selector() {
+        let to = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
+        let amount = U256::from(1_000_000u64);
+        let data = transfer_calldata(to, amount);
+        assert_eq!(data.len(), 4 + 32 + 32, "should be selector (4) + to (32) + amount (32)");
+        assert_eq!(&data[..4], &transferCall::SELECTOR, "selector must match");
+    }
+
+    #[test]
+    fn test_decode_u256_return_full() {
+        let mut raw = [0u8; 32];
+        raw[31] = 42;
+        assert_eq!(decode_u256_return(&raw), U256::from(42u64));
+    }
+
+    #[test]
+    fn test_decode_u256_return_short_returns_zero() {
+        assert_eq!(decode_u256_return(&[1, 2, 3]), U256::ZERO);
+    }
+
+    #[test]
+    fn test_decode_u256_return_large_value() {
+        let val = U256::from(1_000_000_000_000u64);
+        let mut raw = [0u8; 32];
+        raw[24..32].copy_from_slice(&1_000_000_000_000u64.to_be_bytes());
+        assert_eq!(decode_u256_return(&raw), val);
+    }
+}

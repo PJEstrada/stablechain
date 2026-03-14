@@ -4,11 +4,14 @@ use alloy::providers::Provider;
 use alloy::rpc::types::TransactionRequest;
 use async_trait::async_trait;
 
+use alloy::primitives::TxHash;
+use alloy::rpc::types::TransactionReceipt;
+
 use crate::adapters::tempo_provider::{connect_tempo_url, TempoProvider};
 use crate::domain::chain_id::ChainId;
 use crate::domain::erc20;
 use crate::error::ChainAccessError;
-use crate::ports::ChainReader;
+use crate::ports::{ChainReader, ChainWriter};
 
 pub struct TempoAdapter {
     provider: TempoProvider,
@@ -79,5 +82,42 @@ impl ChainReader for TempoAdapter {
             .get_block_number()
             .await
             .map_err(|e| ChainAccessError::Rpc(e.to_string()))
+    }
+}
+
+#[async_trait]
+impl ChainWriter for TempoAdapter {
+    async fn send_raw_transaction(&self, rlp: Bytes) -> Result<TxHash, ChainAccessError> {
+        self.provider
+            .raw_request("eth_sendRawTransaction".into(), (rlp,))
+            .await
+            .map_err(|e| ChainAccessError::Rpc(e.to_string()))
+    }
+
+    async fn wait_for_receipt(
+        &self,
+        tx_hash: &TxHash,
+    ) -> Result<TransactionReceipt, ChainAccessError> {
+        const MAX_ATTEMPTS: u32 = 40;
+        const POLL_MS: u64 = 500;
+
+        for _ in 0..MAX_ATTEMPTS {
+            let receipt: Option<TransactionReceipt> = self
+                .provider
+                .raw_request("eth_getTransactionReceipt".into(), (tx_hash,))
+                .await
+                .map_err(|e| ChainAccessError::Rpc(e.to_string()))?;
+
+            if let Some(r) = receipt {
+                return Ok(r);
+            }
+
+            tokio::time::sleep(std::time::Duration::from_millis(POLL_MS)).await;
+        }
+
+        Err(ChainAccessError::Rpc(format!(
+            "transaction {tx_hash} not confirmed after {}s",
+            MAX_ATTEMPTS * POLL_MS as u32 / 1000
+        )))
     }
 }
