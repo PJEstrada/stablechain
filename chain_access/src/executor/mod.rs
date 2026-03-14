@@ -19,7 +19,11 @@ pub struct TxExecutor<R, W, S> {
 
 impl<R: ChainReader, W: ChainWriter, S: SignerBackend> TxExecutor<R, W, S> {
     pub fn new(reader: R, writer: W, signer: S) -> Self {
-        Self { reader, writer, signer }
+        Self {
+            reader,
+            writer,
+            signer,
+        }
     }
 
     /// Sends a native token transfer.

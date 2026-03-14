@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "pr*", "ci-*", "feat/*", "fix/*"]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  # ── Format ─────────────────────────────────────────────────────────────────
+  # Fastest job — no compilation needed. Fails immediately if code is not
+  # formatted so contributors know before waiting for the full pipeline.
+  fmt:
+    name: Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - run: cargo fmt --all --check
+
+  # ── Lint (Clippy) ──────────────────────────────────────────────────────────
+  # Treats all warnings as errors. Checks all targets (lib, bin, tests).
+  lint:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+
+  # ── Tests ──────────────────────────────────────────────────────────────────
+  # Unit tests only — no network access required. Integration / e2e tests
+  # that hit a live RPC are excluded until a testnet runner is set up.
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --workspace

@@ -2,9 +2,9 @@ pub mod local_key;
 
 pub use local_key::LocalKeySigner;
 
-use async_trait::async_trait;
 use alloy::primitives::{Address, Bytes};
 use alloy::rpc::types::TransactionRequest;
+use async_trait::async_trait;
 
 use crate::error::ChainAccessError;
 

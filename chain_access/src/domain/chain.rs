@@ -1,5 +1,5 @@
-use clap::ValueEnum;
 use crate::domain::network::Network;
+use clap::ValueEnum;
 
 /// Supported chains for this library.
 /// This enum is part of the public API and should remain small and stable.
@@ -18,7 +18,6 @@ impl Chain {
             Chain::Tempo => "tempo",
         }
     }
-
 }
 
 impl core::fmt::Display for Chain {
@@ -50,21 +49,14 @@ pub struct RpcConfig {
 
 impl RpcConfig {
     pub fn new(network: Network, chain: Chain) -> Self {
-        Self {
-            network,
-            chain,
-        }
+        Self { network, chain }
     }
 
     pub fn url(&self) -> String {
         match (self.chain, self.network) {
-            (Chain::Tempo, Network::Testnet) => {
-                "https://rpc.moderato.tempo.xyz".to_string()
-            }
+            (Chain::Tempo, Network::Testnet) => "https://rpc.moderato.tempo.xyz".to_string(),
 
-            (Chain::Arc, Network::Testnet) => {
-                "https://arc-testnet.circle.com".to_string()
-            }
+            (Chain::Arc, Network::Testnet) => "https://arc-testnet.circle.com".to_string(),
 
             // Fail fast for unsupported combos
             (Chain::Tempo, Network::Mainnet) => {

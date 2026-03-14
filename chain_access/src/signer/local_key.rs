@@ -1,9 +1,9 @@
 use alloy::consensus::{SignableTransaction, TxEip1559};
 use alloy::eips::eip2718::Encodable2718;
-use alloy::primitives::{Address, Bytes, TxKind, U256};
-use alloy::rpc::types::TransactionRequest;
 use alloy::network::TxSignerSync;
 use alloy::primitives::Signature;
+use alloy::primitives::{Address, Bytes, TxKind, U256};
+use alloy::rpc::types::TransactionRequest;
 use alloy::signers::local::PrivateKeySigner;
 use async_trait::async_trait;
 
@@ -28,9 +28,8 @@ impl LocalKeySigner {
 
     /// Load from an environment variable that contains a hex private key.
     pub fn from_env(var: &str) -> Result<Self, ChainAccessError> {
-        let val = std::env::var(var).map_err(|_| {
-            ChainAccessError::Signer(format!("env var `{var}` not set"))
-        })?;
+        let val = std::env::var(var)
+            .map_err(|_| ChainAccessError::Signer(format!("env var `{var}` not set")))?;
         Self::from_hex(&val)
     }
 }
@@ -43,21 +42,23 @@ impl SignerBackend for LocalKeySigner {
 
     async fn sign_transaction(&self, tx: TransactionRequest) -> Result<Bytes, ChainAccessError> {
         let err = |field: &str| {
-            ChainAccessError::TxBuild(format!("missing required field `{field}` in TransactionRequest"))
+            ChainAccessError::TxBuild(format!(
+                "missing required field `{field}` in TransactionRequest"
+            ))
         };
 
         let to = tx.to.unwrap_or(TxKind::Create);
 
         let mut typed_tx = TxEip1559 {
-            chain_id:                  tx.chain_id.ok_or_else(|| err("chain_id"))?,
-            nonce:                     tx.nonce.ok_or_else(|| err("nonce"))?,
-            gas_limit:                 tx.gas.ok_or_else(|| err("gas"))?,
-            max_fee_per_gas:           tx.max_fee_per_gas.ok_or_else(|| err("max_fee_per_gas"))?,
-            max_priority_fee_per_gas:  tx.max_priority_fee_per_gas.unwrap_or(0),
+            chain_id: tx.chain_id.ok_or_else(|| err("chain_id"))?,
+            nonce: tx.nonce.ok_or_else(|| err("nonce"))?,
+            gas_limit: tx.gas.ok_or_else(|| err("gas"))?,
+            max_fee_per_gas: tx.max_fee_per_gas.ok_or_else(|| err("max_fee_per_gas"))?,
+            max_priority_fee_per_gas: tx.max_priority_fee_per_gas.unwrap_or(0),
             to,
-            value:                     tx.value.unwrap_or(U256::ZERO),
-            access_list:               Default::default(),
-            input:                     tx.input.into_input().unwrap_or_default(),
+            value: tx.value.unwrap_or(U256::ZERO),
+            access_list: Default::default(),
+            input: tx.input.into_input().unwrap_or_default(),
         };
 
         let sig: Signature = self

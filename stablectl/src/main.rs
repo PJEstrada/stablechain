@@ -3,7 +3,6 @@ mod cli;
 mod cmd;
 mod display;
 
-
 use clap::Parser;
 
 #[tokio::main]

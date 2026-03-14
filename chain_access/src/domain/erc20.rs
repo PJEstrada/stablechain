@@ -35,7 +35,11 @@ mod tests {
     fn test_balance_of_calldata_selector() {
         let owner = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
         let data = balance_of_calldata(owner);
-        assert_eq!(data.len(), 4 + 32, "should be selector (4) + padded address (32)");
+        assert_eq!(
+            data.len(),
+            4 + 32,
+            "should be selector (4) + padded address (32)"
+        );
         assert_eq!(&data[..4], &balanceOfCall::SELECTOR, "selector must match");
     }
 
@@ -44,7 +48,11 @@ mod tests {
         let to = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
         let amount = U256::from(1_000_000u64);
         let data = transfer_calldata(to, amount);
-        assert_eq!(data.len(), 4 + 32 + 32, "should be selector (4) + to (32) + amount (32)");
+        assert_eq!(
+            data.len(),
+            4 + 32 + 32,
+            "should be selector (4) + to (32) + amount (32)"
+        );
         assert_eq!(&data[..4], &transferCall::SELECTOR, "selector must match");
     }
 
