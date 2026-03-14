@@ -1,19 +1,19 @@
-use crate::domain::chain::Chain;
 use crate::domain::EVM_ADDRESS_LEN;
+use crate::domain::chain::Chain;
 
 /// AccountRef is the stable handle the system uses to refer to an account
 /// that lives in some custody/control system.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct AccountRef {
     pub id: AccountId,
-    pub ctrl: AccountControl
+    pub ctrl: AccountControl,
 }
 
 // represents the unique identifier of an account in a particular custody system.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum AccountId {
-    Local { name: String},
-    Privy {wallet_id: String}
+    Local { name: String },
+    Privy { wallet_id: String },
 }
 
 // AccountControl represents how the account is controlled (custody + signing model).
@@ -37,7 +37,6 @@ pub struct AccountCapabilities {
     /// the account supports batching (e.g., multi-call or native batching).
     pub supports_batching: bool,
 }
-
 
 /// Resolved account metadata returned by a custody/key-management system.
 /// TODO: still need to figure out privy specifics, this might change drastically.

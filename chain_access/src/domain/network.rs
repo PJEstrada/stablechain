@@ -1,4 +1,4 @@
-use crate::domain::chain::{Chain};
+use crate::domain::chain::Chain;
 use crate::domain::chain_ids::chains::TEMPO_TESTNET;
 use clap::ValueEnum;
 
@@ -8,7 +8,7 @@ pub enum Network {
     Testnet,
 }
 
-pub fn chain_id(chain: Chain, network: Network) ->  anyhow::Result<u64> {
+pub fn chain_id(chain: Chain, network: Network) -> anyhow::Result<u64> {
     match (chain, network) {
         (Chain::Tempo, Network::Mainnet) => Ok(TEMPO_TESTNET),
         _ => anyhow::bail!("Unsupported chain type"),
@@ -22,7 +22,6 @@ impl Network {
             Network::Testnet => "testnet",
         }
     }
-
 }
 
 impl core::fmt::Display for Network {

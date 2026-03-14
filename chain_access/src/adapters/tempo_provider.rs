@@ -7,7 +7,7 @@ use crate::error::ChainAccessError;
 pub type TempoProvider = FillProvider<
     JoinFill<Identity, TempoFillers<NonceFiller>>,
     RootProvider<TempoNetwork>,
-    TempoNetwork
+    TempoNetwork,
 >;
 
 pub async fn connect_tempo_url(url: &str) -> Result<TempoProvider, ChainAccessError> {

@@ -29,7 +29,9 @@ impl core::str::FromStr for ChainId {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s.trim().to_ascii_lowercase().as_str() {
             "tempo-testnet" | "tempo_testnet" => Ok(ChainId::TempoTestnet),
-            other => Err(ParseChainIdError { input: other.to_string() }),
+            other => Err(ParseChainIdError {
+                input: other.to_string(),
+            }),
         }
     }
 }
@@ -53,8 +55,14 @@ mod tests {
 
     #[test]
     fn chain_id_from_str() {
-        assert_eq!("tempo-testnet".parse::<ChainId>().unwrap(), ChainId::TempoTestnet);
-        assert_eq!("tempo_testnet".parse::<ChainId>().unwrap(), ChainId::TempoTestnet);
+        assert_eq!(
+            "tempo-testnet".parse::<ChainId>().unwrap(),
+            ChainId::TempoTestnet
+        );
+        assert_eq!(
+            "tempo_testnet".parse::<ChainId>().unwrap(),
+            ChainId::TempoTestnet
+        );
     }
 
     #[test]
@@ -74,6 +82,9 @@ mod tests {
         assert_eq!(cfg.chain_id(), 42431);
         assert_eq!(cfg.name(), "tempo-testnet");
         assert_eq!(cfg.tx_url("0xabc"), "https://explore.tempo.xyz/tx/0xabc");
-        assert_eq!(cfg.address_url("0xdef"), "https://explore.tempo.xyz/address/0xdef");
+        assert_eq!(
+            cfg.address_url("0xdef"),
+            "https://explore.tempo.xyz/address/0xdef"
+        );
     }
 }

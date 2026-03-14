@@ -1,5 +1,5 @@
-pub mod tempo_provider;
 pub mod tempo_adapter;
+pub mod tempo_provider;
 
 pub use tempo_adapter::TempoAdapter;
 

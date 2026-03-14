@@ -1,6 +1,6 @@
-use async_trait::async_trait;
 use alloy::primitives::{Bytes, TxHash};
 use alloy::rpc::types::TransactionReceipt;
+use async_trait::async_trait;
 
 use crate::error::ChainAccessError;
 
@@ -9,5 +9,8 @@ use crate::error::ChainAccessError;
 pub trait ChainWriter: Send + Sync {
     async fn send_raw_transaction(&self, rlp: Bytes) -> Result<TxHash, ChainAccessError>;
 
-    async fn wait_for_receipt(&self, tx_hash: &TxHash) -> Result<TransactionReceipt, ChainAccessError>;
+    async fn wait_for_receipt(
+        &self,
+        tx_hash: &TxHash,
+    ) -> Result<TransactionReceipt, ChainAccessError>;
 }

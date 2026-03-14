@@ -1,5 +1,5 @@
-use clap::{Parser, Subcommand};
 use chain_access::domain::chain_id::ChainId;
+use clap::{Parser, Subcommand};
 
 #[derive(Parser)]
 #[command(name = "stablectl")]

@@ -7,7 +7,7 @@ use async_trait::async_trait;
 use alloy::primitives::TxHash;
 use alloy::rpc::types::TransactionReceipt;
 
-use crate::adapters::tempo_provider::{connect_tempo_url, TempoProvider};
+use crate::adapters::tempo_provider::{TempoProvider, connect_tempo_url};
 use crate::domain::chain_id::ChainId;
 use crate::domain::erc20;
 use crate::error::ChainAccessError;
@@ -48,7 +48,8 @@ impl ChainReader for TempoAdapter {
         let tx = TransactionRequest::default()
             .with_to(token)
             .with_input(calldata);
-        let raw: Bytes = self.provider
+        let raw: Bytes = self
+            .provider
             .raw_request("eth_call".into(), (tx, "latest"))
             .await
             .map_err(|e| ChainAccessError::Rpc(e.to_string()))?;
@@ -63,7 +64,8 @@ impl ChainReader for TempoAdapter {
     }
 
     async fn estimate_gas(&self, tx: &TransactionRequest) -> Result<u64, ChainAccessError> {
-        let gas: alloy::primitives::U64 = self.provider
+        let gas: alloy::primitives::U64 = self
+            .provider
             .raw_request("eth_estimateGas".into(), (tx, "latest"))
             .await
             .map_err(|e| ChainAccessError::Rpc(e.to_string()))?;
