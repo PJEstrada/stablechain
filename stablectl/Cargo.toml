@@ -9,5 +9,7 @@ clap = { version = "4.5.58", features = ["derive"] }
 tokio = { version = "1.49.0", features = ["rt-multi-thread", "macros"] }
 async-trait = "0.1.89"
 chain_access = { path = "../chain_access" }
-hex = "0.4"
-alloy-primitives = "1.5.6"
+alloy = "1.6.3"
+comfy-table = "7"
+indicatif   = "0.17"
+console     = "0.15"

@@ -1,6 +1,7 @@
 mod app;
 mod cli;
 mod cmd;
+mod display;
 
 
 use clap::Parser;

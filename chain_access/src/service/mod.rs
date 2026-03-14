@@ -1,4 +1,1 @@
-pub mod chain_router;
-pub mod chain_handlers;
-
-pub use chain_router::ChainRouter;
+// Legacy service/ layer removed — superseded by ports/ traits and adapters/.
