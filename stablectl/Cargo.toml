@@ -13,3 +13,8 @@ alloy = "1.6.3"
 comfy-table = "7"
 indicatif   = "0.17"
 console     = "0.15"
+temp-env = "0.3.6"
+privy-rs = "0.1.0-alpha"
+
+[dev-dependencies]
+temp-env = "0.3"

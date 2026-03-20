@@ -46,6 +46,10 @@ pub enum WalletSubcmd {
     Balance(BalanceCmd),
     /// Send tokens
     Send(SendCmd),
+    /// Create a new wallet
+    Create(CreateWalletArgs),
+    /// List supported TIP-20 tokens
+    Tokens,
 }
 
 #[derive(Parser)]
@@ -88,11 +92,18 @@ pub struct SendCmd {
     pub kind: SendKind,
 }
 
+
+#[derive(Parser)]
+pub struct CreateWalletArgs {
+    #[arg(long, default_value = "")]
+    pub owner: String,
+}
+
 #[derive(Subcommand)]
 pub enum SendKind {
-    /// Send native TEMPO
+    /// Send native TEMPO (NOT SUPPORTED - Tempo has no native token)
     Native(SendNativeArgs),
-    /// Send an ERC-20 token
+    /// Send a TIP-20/ERC-20 token (e.g., pathUSD, AlphaUSD, BetaUSD, ThetaUSD)
     Erc20(SendErc20Args),
 }
 
@@ -104,7 +115,11 @@ pub struct SignerArgs {
     pub signer: String,
     /// Environment variable containing the hex private key (for --signer local-key)
     #[arg(long)]
-    pub key_env: String,
+    pub key_env: Option<String>,
+
+    /// Wallet ID (for --signer privy)
+    #[arg(long, default_value = "")]
+    pub wallet_id: Option<String>,
 }
 
 #[derive(Parser)]

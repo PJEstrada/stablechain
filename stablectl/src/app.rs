@@ -11,6 +11,8 @@ impl App {
         let reader = connect_reader(chain_id)
             .await
             .map_err(|e| anyhow::anyhow!("{e}"))?;
+
+
         Ok(Self { reader })
     }
 }
