@@ -1,14 +1,13 @@
-use privy_rs::PrivyClient;
-use crate::domain::chain_id::ChainId;
-use privy_rs::generated::types::{CreateWalletBody, Wallet, WalletChainType};
 use mockall::automock;
+use privy_rs::PrivyClient;
+use privy_rs::generated::types::{CreateWalletBody, Wallet};
 
 pub const APP_ID_ENV_VAR: &str = "PRIVY_TEST_APP_ID";
 pub const APP_SECRET_ENV_VAR: &str = "PRIVY_TEST_APP_SECRET";
 
 #[automock]
 pub trait WalletService {
-    async fn create_wallet(&self, request: CreateWalletBody) ->  anyhow::Result<Wallet>;
+    async fn create_wallet(&self, request: CreateWalletBody) -> anyhow::Result<Wallet>;
 }
 pub struct WalletsManager {
     client: PrivyClient,
@@ -20,18 +19,18 @@ impl WalletsManager {
     }
 }
 
-
 impl WalletService for WalletsManager {
-     async fn create_wallet(&self, request: CreateWalletBody) -> anyhow::Result<Wallet> {
-        let wallet = self.client
+    async fn create_wallet(&self, request: CreateWalletBody) -> anyhow::Result<Wallet> {
+        let wallet = self
+            .client
             .wallets()
             .create(
                 None, // idempotency key
-                &request
+                &request,
             )
             .await?
             .into_inner();
-         Ok(wallet)
+        Ok(wallet)
     }
 }
 
@@ -39,7 +38,9 @@ impl WalletService for WalletsManager {
 mod tests {
     use super::*;
     use mockall::predicate::*;
-    use privy_rs::generated::types::{CreateWalletBody, Wallet, WalletChainType, WalletAdditionalSigner};
+    use privy_rs::generated::types::{
+        CreateWalletBody, Wallet, WalletAdditionalSigner, WalletChainType,
+    };
 
     fn mock_wallet() -> Wallet {
         Wallet {
@@ -85,13 +86,15 @@ mod tests {
             .once()
             .returning(|_| Err(anyhow::anyhow!("api error")));
 
-        let result = mock.create_wallet(CreateWalletBody {
-            chain_type: WalletChainType::Ethereum,
-            additional_signers: None,
-            owner: None,
-            owner_id: None,
-            policy_ids: vec![],
-        }).await;
+        let result = mock
+            .create_wallet(CreateWalletBody {
+                chain_type: WalletChainType::Ethereum,
+                additional_signers: None,
+                owner: None,
+                owner_id: None,
+                policy_ids: vec![],
+            })
+            .await;
 
         assert!(result.is_err());
     }

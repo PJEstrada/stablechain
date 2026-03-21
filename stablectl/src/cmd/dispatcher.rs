@@ -1,8 +1,8 @@
-use chain_access::signer::SignerBackendType;
+use super::{chain_info, send, tokens, wallet};
 use crate::app::App;
-use crate::cli::{BalanceKind, ChainSubcmd, Cli, Command, CreateWalletArgs, SendKind, WalletSubcmd};
+use crate::cli::{BalanceKind, ChainSubcmd, Cli, Command, SendKind, WalletSubcmd};
 use crate::cmd::signer_builder::SignerConfig;
-use super::{chain_info, send, wallet, tokens};
+use chain_access::signer::SignerBackendType;
 
 pub async fn dispatch(cli: Cli) -> anyhow::Result<()> {
     let app = App::init(cli.chain).await?;
@@ -18,12 +18,8 @@ pub async fn dispatch(cli: Cli) -> anyhow::Result<()> {
                     wallet::run_balance_erc20(&app, &args.token, &args.address, args.decimals).await
                 }
             },
-            WalletSubcmd::Create(args) => {
-                wallet::create_wallet_privy().await
-            }
-            WalletSubcmd::Tokens => {
-                tokens::run_tokens().await
-            }
+            WalletSubcmd::Create(_args) => wallet::create_wallet_privy().await,
+            WalletSubcmd::Tokens => tokens::run_tokens().await,
             WalletSubcmd::Send(send_cmd) => match send_cmd.kind {
                 SendKind::Native(args) => {
                     let signer_str = args.signer.signer;
@@ -45,7 +41,15 @@ pub async fn dispatch(cli: Cli) -> anyhow::Result<()> {
                         key_env: args.signer.key_env,
                         wallet_id: args.signer.wallet_id,
                     };
-                    send::run_send_erc20(&app, &signer_config, &args.token, &args.to, &args.amount, args.decimals).await
+                    send::run_send_erc20(
+                        &app,
+                        &signer_config,
+                        &args.token,
+                        &args.to,
+                        &args.amount,
+                        args.decimals,
+                    )
+                    .await
                 }
             },
         },

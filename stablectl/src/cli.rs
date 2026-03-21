@@ -92,7 +92,6 @@ pub struct SendCmd {
     pub kind: SendKind,
 }
 
-
 #[derive(Parser)]
 pub struct CreateWalletArgs {
     #[arg(long, default_value = "")]
