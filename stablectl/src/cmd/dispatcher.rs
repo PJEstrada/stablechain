@@ -23,8 +23,9 @@ pub async fn dispatch(cli: Cli) -> anyhow::Result<()> {
             WalletSubcmd::Send(send_cmd) => match send_cmd.kind {
                 SendKind::Native(args) => {
                     let signer_str = args.signer.signer;
-                    let backend_type = SignerBackendType::from_str(&signer_str)
-                        .ok_or_else(|| anyhow::anyhow!("invalid --signer: {signer_str}"))?;
+                    let backend_type = signer_str
+                        .parse::<SignerBackendType>()
+                        .map_err(|_| anyhow::anyhow!("invalid --signer: {signer_str}"))?;
                     let signer_config = SignerConfig {
                         signer_backend: backend_type,
                         key_env: args.signer.key_env,
@@ -34,8 +35,9 @@ pub async fn dispatch(cli: Cli) -> anyhow::Result<()> {
                 }
                 SendKind::Erc20(args) => {
                     let signer_str = args.signer.signer;
-                    let backend_type = SignerBackendType::from_str(&signer_str)
-                        .ok_or_else(|| anyhow::anyhow!("invalid --signer: {signer_str}"))?;
+                    let backend_type = signer_str
+                        .parse::<SignerBackendType>()
+                        .map_err(|_| anyhow::anyhow!("invalid --signer: {signer_str}"))?;
                     let signer_config = SignerConfig {
                         signer_backend: backend_type,
                         key_env: args.signer.key_env,

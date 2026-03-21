@@ -6,6 +6,7 @@ pub const APP_ID_ENV_VAR: &str = "PRIVY_TEST_APP_ID";
 pub const APP_SECRET_ENV_VAR: &str = "PRIVY_TEST_APP_SECRET";
 
 #[automock]
+#[allow(async_fn_in_trait)]
 pub trait WalletService {
     async fn create_wallet(&self, request: CreateWalletBody) -> anyhow::Result<Wallet>;
 }
@@ -37,7 +38,6 @@ impl WalletService for WalletsManager {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use mockall::predicate::*;
     use privy_rs::generated::types::{
         CreateWalletBody, Wallet, WalletAdditionalSigner, WalletChainType,
     };
@@ -52,7 +52,7 @@ mod tests {
             imported_at: None,
             owner_id: None,
             policy_ids: vec![],
-            additional_signers: WalletAdditionalSigner::default(),
+            additional_signers: WalletAdditionalSigner(vec![]),
             public_key: None,
         }
     }

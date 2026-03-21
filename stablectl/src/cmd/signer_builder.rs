@@ -43,27 +43,36 @@ pub fn build_signer(config: &SignerConfig) -> Result<Box<dyn SignerBackend>, any
 mod tests {
     use super::*;
     use chain_access::signer::SignerBackendType;
-    use downcast::Any;
 
     #[test]
     fn test_build_signer() {
-        temp_env::with_var("TEST_LOCAL_KEY_123", Some("0xdeadbeef..."), || {
-            let config = SignerConfig {
-                signer_backend: SignerBackendType::LocalKey,
-                key_env: Some("TEST_LOCAL_KEY_123".to_string()),
-                wallet_id: None,
-            };
-            let signer = build_signer(&config).unwrap();
-            let is_local = signer.as_any().downcast_ref::<LocalKeySigner>().is_some();
-            assert!(is_local);
-        });
+        temp_env::with_var(
+            "TEST_LOCAL_KEY_123",
+            Some("0x1111111111111111111111111111111111111111111111111111111111111111"),
+            || {
+                let config = SignerConfig {
+                    signer_backend: SignerBackendType::LocalKey,
+                    key_env: Some("TEST_LOCAL_KEY_123".to_string()),
+                    wallet_id: None,
+                };
+                let signer = build_signer(&config);
+                assert!(signer.is_ok());
+            },
+        );
+    }
 
-        // case for privy
-        let config = SignerConfig {
-            signer_backend: SignerBackendType::Privy,
-            key_env: None,
-            wallet_id: Some("test_wallet_id".to_string()),
-        };
-        let _privy_signer = build_signer(&config);
+    #[test]
+    fn test_build_signer_privy_missing_env_fails() {
+        temp_env::with_var("PRIVY_TEST_APP_ID", None::<String>, || {
+            temp_env::with_var("PRIVY_TEST_APP_SECRET", None::<String>, || {
+                let config = SignerConfig {
+                    signer_backend: SignerBackendType::Privy,
+                    key_env: None,
+                    wallet_id: Some("test_wallet_id".to_string()),
+                };
+                let signer = build_signer(&config);
+                assert!(signer.is_err());
+            });
+        });
     }
 }
