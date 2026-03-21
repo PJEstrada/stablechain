@@ -12,26 +12,29 @@ pub const SUPPORTED_TOKENS: &[(&str, &str)] = &[
     ("ThetaUSD", THETAUSD),
 ];
 
-use comfy_table::{Table, presets, Cell};
+use comfy_table::{Cell, Table, presets};
 use console::style;
 
 pub async fn run_tokens() -> anyhow::Result<()> {
     let mut table = Table::new();
     table.load_preset(presets::NOTHING);
     table.set_header(vec!["Token", "Contract Address"]);
-    
+
     for (symbol, address) in SUPPORTED_TOKENS {
-        table.add_row(vec![
-            Cell::new(symbol),
-            Cell::new(address),
-        ]);
+        table.add_row(vec![Cell::new(symbol), Cell::new(address)]);
     }
-    
-    println!("{}", style("Supported TIP-20 tokens on Tempo testnet:").bold());
+
+    println!(
+        "{}",
+        style("Supported TIP-20 tokens on Tempo testnet:").bold()
+    );
     println!();
     println!("{}", table);
     println!();
-    println!("Get faucet funds at: {}", style("https://docs.tempo.xyz/quickstart/faucet").cyan());
+    println!(
+        "Get faucet funds at: {}",
+        style("https://docs.tempo.xyz/quickstart/faucet").cyan()
+    );
     println!();
     println!("Example usage:");
     println!("  cargo run -- wallet send erc20 \\");
@@ -41,6 +44,6 @@ pub async fn run_tokens() -> anyhow::Result<()> {
     println!("    --decimals 18 \\");
     println!("    --signer privy \\");
     println!("    --wallet-id <WALLET_ID>");
-    
+
     Ok(())
 }

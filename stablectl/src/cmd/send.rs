@@ -4,18 +4,13 @@ use alloy::network::TransactionBuilder;
 use alloy::primitives::utils::parse_units;
 use alloy::primitives::{Address, U256};
 use alloy::rpc::types::TransactionRequest;
-use comfy_table::{Table, presets, Cell};
+use comfy_table::{Cell, Table, presets};
 use console::style;
 
-use chain_access::adapters::connect_writer;
-use chain_access::signer::SignerBackend;
-use chain_access::LocalKeySigner;
-use chain_access::signer::privy_signer::PrivySigner;
-use chain_access::signer::SignerBackendType;
-
 use crate::app::App;
-use crate::cmd::signer_builder::{build_signer, SignerConfig};
+use crate::cmd::signer_builder::{SignerConfig, build_signer};
 use crate::display::spinner;
+use chain_access::adapters::connect_writer;
 
 pub async fn run_send_native(
     _app: &App,
@@ -112,14 +107,17 @@ pub async fn run_send_erc20(
 
     // Display transaction result in a table
     let key = |s: &str| Cell::new(s).fg(comfy_table::Color::DarkGrey);
-    
+
     let mut table = Table::new();
     table.load_preset(presets::NOTHING);
-    table.add_row(vec![key("Signer"), Cell::new(format!("{} {}", signer.signer_kind(), from))]);
+    table.add_row(vec![
+        key("Signer"),
+        Cell::new(format!("{} {}", signer.signer_kind(), from)),
+    ]);
     table.add_row(vec![key("Token"), Cell::new(token_addr.to_string())]);
     table.add_row(vec![key("To"), Cell::new(to_addr.to_string())]);
     table.add_row(vec![key("Amount"), Cell::new(format!("{} tokens", amount))]);
-    
+
     println!("{table}");
     println!();
 
@@ -128,14 +126,16 @@ pub async fn run_send_erc20(
     } else {
         style("✗ Failed").red()
     };
-    
+
     println!("{} in block #{}", status, receipt.block_number.unwrap_or(0));
-    println!("  {} {}", 
-        style("Tx hash").dim(), 
+    println!(
+        "  {} {}",
+        style("Tx hash").dim(),
         style(format!("{tx_hash}")).cyan()
     );
-    println!("  {} {}", 
-        style("Explorer").dim(), 
+    println!(
+        "  {} {}",
+        style("Explorer").dim(),
         style(format!("https://explore.testnet.tempo.xyz/tx/{tx_hash}")).cyan()
     );
     Ok(())

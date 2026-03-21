@@ -12,7 +12,6 @@ impl App {
             .await
             .map_err(|e| anyhow::anyhow!("{e}"))?;
 
-
         Ok(Self { reader })
     }
 }

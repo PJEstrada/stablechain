@@ -7,6 +7,7 @@ pub use privy_signer::PrivySigner;
 use alloy::primitives::{Address, Bytes};
 use alloy::rpc::types::TransactionRequest;
 use async_trait::async_trait;
+use std::str::FromStr;
 
 use crate::error::ChainAccessError;
 
@@ -15,12 +16,14 @@ pub enum SignerBackendType {
     Privy,
 }
 
-impl SignerBackendType {
-    pub fn from_str(s: &str) -> Option<Self> {
+impl FromStr for SignerBackendType {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "local-key" => Some(Self::LocalKey),
-            "privy" => Some(Self::Privy),
-            _ => None,
+            "local-key" => Ok(Self::LocalKey),
+            "privy" => Ok(Self::Privy),
+            _ => Err(()),
         }
     }
 }
