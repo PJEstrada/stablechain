@@ -23,3 +23,5 @@ target
 # Local secrets — never commit
 .env
 .env.demo
+
+stablectl/login-app/node_modules

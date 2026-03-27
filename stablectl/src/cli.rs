@@ -20,6 +20,8 @@ pub enum Command {
     Chain(ChainCmd),
     /// Wallet operations
     Wallet(WalletCmd),
+    /// Signer session/auth operations
+    Signer(SignerCmd),
 }
 
 #[derive(Parser)]
@@ -98,6 +100,38 @@ pub struct CreateWalletArgs {
     pub owner: String,
 }
 
+#[derive(Parser)]
+pub struct SignerCmd {
+    #[command(subcommand)]
+    pub sub: SignerSubcmd,
+}
+
+#[derive(Subcommand)]
+pub enum SignerSubcmd {
+    /// Save user JWT session for --signer privy-user
+    Login(SignerLoginArgs),
+    /// Open local browser flow to capture and save a user JWT
+    LoginBrowser(SignerLoginBrowserArgs),
+    /// Remove local user JWT session
+    Logout,
+    /// Show current signer session status
+    Whoami,
+}
+
+#[derive(Parser)]
+pub struct SignerLoginArgs {
+    /// User JWT token to store locally for --signer privy-user
+    #[arg(long)]
+    pub jwt: String,
+}
+
+#[derive(Parser)]
+pub struct SignerLoginBrowserArgs {
+    /// Local port for callback/capture page
+    #[arg(long, default_value_t = 8787)]
+    pub port: u16,
+}
+
 #[derive(Subcommand)]
 pub enum SendKind {
     /// Send native TEMPO (NOT SUPPORTED - Tempo has no native token)
@@ -116,7 +150,7 @@ pub struct SignerArgs {
     #[arg(long)]
     pub key_env: Option<String>,
 
-    /// Wallet ID (for --signer privy)
+    /// Wallet ID (for --signer privy or --signer privy-user)
     #[arg(long, default_value = "")]
     pub wallet_id: Option<String>,
 }

@@ -1,6 +1,6 @@
-use super::{chain_info, send, tokens, wallet};
+use super::{chain_info, send, signer, tokens, wallet};
 use crate::app::App;
-use crate::cli::{BalanceKind, ChainSubcmd, Cli, Command, SendKind, WalletSubcmd};
+use crate::cli::{BalanceKind, ChainSubcmd, Cli, Command, SendKind, SignerSubcmd, WalletSubcmd};
 use crate::cmd::signer_builder::SignerConfig;
 use chain_access::signer::SignerBackendType;
 
@@ -10,6 +10,12 @@ pub async fn dispatch(cli: Cli) -> anyhow::Result<()> {
     match cli.command {
         Command::Chain(cmd) => match cmd.sub {
             ChainSubcmd::Info => chain_info::run_info(&app).await,
+        },
+        Command::Signer(cmd) => match cmd.sub {
+            SignerSubcmd::Login(args) => signer::run_login(&args.jwt).await,
+            SignerSubcmd::LoginBrowser(args) => signer::run_login_browser(args.port).await,
+            SignerSubcmd::Logout => signer::run_logout().await,
+            SignerSubcmd::Whoami => signer::run_whoami().await,
         },
         Command::Wallet(cmd) => match cmd.sub {
             WalletSubcmd::Balance(balance_cmd) => match balance_cmd.kind {

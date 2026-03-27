@@ -1,8 +1,10 @@
 pub mod local_key;
 pub mod privy_signer;
+pub mod privy_user_signer;
 
 pub use local_key::LocalKeySigner;
 pub use privy_signer::PrivySigner;
+pub use privy_user_signer::PrivyUserSigner;
 
 use alloy::primitives::{Address, Bytes};
 use alloy::rpc::types::TransactionRequest;
@@ -14,6 +16,7 @@ use crate::error::ChainAccessError;
 pub enum SignerBackendType {
     LocalKey,
     Privy,
+    PrivyUser,
 }
 
 impl FromStr for SignerBackendType {
@@ -23,6 +26,7 @@ impl FromStr for SignerBackendType {
         match s {
             "local-key" => Ok(Self::LocalKey),
             "privy" => Ok(Self::Privy),
+            "privy-user" => Ok(Self::PrivyUser),
             _ => Err(()),
         }
     }
